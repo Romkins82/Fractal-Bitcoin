@@ -85,7 +85,7 @@ After=network.target
 
 [Service]
 User=root
-WorkingDirectory=/root/fractaldu
+WorkingDirectory=/root/fractald
 ExecStart=/root/fractald-/bin/bitcoind -datadir=/root/fractald/data/ -maxtipage=504576000
 Restart=always
 RestartSec=3
