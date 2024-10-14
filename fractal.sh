@@ -134,7 +134,7 @@ function view_private_key() {
 
 # Переход в директорию fractald
 
-    cd /root/fractald
+    cd /root/fractald/bin
     
     # Использование bitcoin-wallet для экспорта приватного ключа
     ./bitcoin-wallet -wallet=/root/.bitcoin/wallets/wallet/wallet.dat -dumpfile=/root/.bitcoin/wallets/wallet/MyPK.dat dump
