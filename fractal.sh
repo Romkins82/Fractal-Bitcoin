@@ -17,11 +17,11 @@ function main_menu() {
         echo -e '\e[0m'
         echo "Для выхода из скрипта нажмите Ctrl+C"
         echo "Выберите действие:"
-        echo "1) Установить узел (версия 0.1.8)"
+        echo "1) Установить узел (версия 0.2.1)"
         echo "2) Просмотреть логи службы"
         echo "3) Создать кошелек"
         echo "4) Просмотреть приватный ключ"
-        echo "5) Обновить скрипт (обновление с версии 0.1.7)"
+        echo "5) Обновить скрипт (обновление с версии 0.2.0)"
         echo "6) Выход"
         echo -n "Введите опцию [1-6]: "
         read choice
@@ -54,15 +54,19 @@ function install_node() {
 
     # Загрузка библиотеки fractald
     echo "Загрузка библиотеки fractald..."
-    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.1.8/fractald-0.1.8-x86_64-linux-gnu.tar.gz
+    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.2.1/fractald-0.2.1-x86_64-linux-gnu.tar.gz
 
     # Извлечение библиотеки fractald
     echo "Извлечение библиотеки fractald..."
-    tar -zxvf fractald-0.1.8-x86_64-linux-gnu.tar.gz
+    tar -zxvf fractald-0.2.1-x86_64-linux-gnu.tar.gz
 
+    # Меняем название папки
+    echo "Меняем название папки на fractald"
+    mv fractald-0.2.1-x86_64-linux-gnu fractald
+    
     # Переход в директорию fractald
     echo "Переход в директорию fractald..."
-    cd fractald-0.1.8-x86_64-linux-gnu
+    cd fractald
 
     # Создание директории data
     echo "Создание директории data..."
@@ -81,8 +85,8 @@ After=network.target
 
 [Service]
 User=root
-WorkingDirectory=/root/fractald-0.1.8-x86_64-linux-gnu
-ExecStart=/root/fractald-0.1.8-x86_64-linux-gnu/bin/bitcoind -datadir=/root/fractald-0.1.8-x86_64-linux-gnu/data/ -maxtipage=504576000
+WorkingDirectory=/root/fractaldu
+ExecStart=/root/fractald-/bin/bitcoind -datadir=/root/fractald/data/ -maxtipage=504576000
 Restart=always
 RestartSec=3
 LimitNOFILE=infinity
@@ -118,7 +122,7 @@ function view_logs() {
 # Функция создания кошелька
 function create_wallet() {
     echo "Создание кошелька..."
-    cd /root/fractald-0.1.8-x86_64-linux-gnu/bin && ./bitcoin-wallet -wallet=wallet -legacy create
+    cd /root/fractald/bin && ./bitcoin-wallet -wallet=wallet -legacy create
     
     # Ожидание нажатия клавиши для возврата в главное меню
     read -p "Нажмите любую клавишу для возврата в главное меню..."
@@ -127,9 +131,10 @@ function create_wallet() {
 # Функция просмотра приватного ключа
 function view_private_key() {
     echo "Просмотр приватного ключа..."
-    
-    # Переход в директорию fractald
-    cd /root/fractald-0.1.8-x86_64-linux-gnu/bin
+
+# Переход в директорию fractald
+
+    cd /root/fractald
     
     # Использование bitcoin-wallet для экспорта приватного ключа
     ./bitcoin-wallet -wallet=/root/.bitcoin/wallets/wallet/wallet.dat -dumpfile=/root/.bitcoin/wallets/wallet/MyPK.dat dump
@@ -147,49 +152,33 @@ function update_script() {
 
     # Резервное копирование директории data
     echo "Резервное копирование директории data..."
-    sudo cp -r /root/fractald-0.1.7-x86_64-linux-gnu/data /root/fractal-data-backup
+    sudo cp -r /root/fractald/data /root/fractal-data-backup
 
     echo "Удаление прошлой версии..."
     sudo systemctl stop fractald
     sudo systemctl disable fractald
-    sudo rm /etc/systemd/system/fractald.service
     sudo systemctl daemon-reload
-    rm -rf /root/fractald-0.1.7-x86_64-linux-gnu
+    rm -rf /root/fractald
 
     # Загрузка новой версии библиотеки fractald
     echo "Загрузка новой версии библиотеки fractald..."
-    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.1.8/fractald-0.1.8-x86_64-linux-gnu.tar.gz
+    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.2.1/fractald-0.2.1-x86_64-linux-gnu.tar.gz
 
     # Извлечение новой версии библиотеки fractald
     echo "Извлечение новой версии библиотеки fractald..."
-    tar -zxvf fractald-0.1.8-x86_64-linux-gnu.tar.gz
+    tar -zxvf fractald-0.2.1-x86_64-linux-gnu.tar.gz
+
+    # Меняем название папки
+    echo "Меняем название папки на fractald"
+    mv fractald-0.2.1-x86_64-linux-gnu fractald
 
     # Переход в директорию новой версии fractald
     echo "Переход в директорию новой версии fractald..."
-    cd fractald-0.1.8-x86_64-linux-gnu
+    cd fractald
 
     # Восстановление данных из резервной копии
     echo "Восстановление данных из резервной копии..."
-    cp -r /root/fractal-data-backup /root/fractald-0.1.8-x86_64-linux-gnu/
-
-    # Обновление файла службы systemd (если есть изменения)
-    echo "Обновление файла службы systemd..."
-    sudo tee /etc/systemd/system/fractald.service > /dev/null <<EOF
-[Unit]
-Description=Fractal Node
-After=network.target
-
-[Service]
-User=root
-WorkingDirectory=/root/fractald-0.1.8-x86_64-linux-gnu
-ExecStart=/root/fractald-0.1.8-x86_64-linux-gnu/bin/bitcoind -datadir=/root/fractald-0.1.8-x86_64-linux-gnu/data/ -maxtipage=504576000
-Restart=always
-RestartSec=3
-LimitNOFILE=infinity
-
-[Install]
-WantedBy=multi-user.target
-EOF
+    cp -r /root/fractal-data-backup /root/fractald/
 
     # Перезагрузка конфигурации менеджера systemd
     echo "Перезагрузка конфигурации менеджера systemd..."
