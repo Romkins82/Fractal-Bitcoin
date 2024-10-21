@@ -17,11 +17,11 @@ function main_menu() {
         echo -e '\e[0m'
         echo "Для выхода из скрипта нажмите Ctrl+C"
         echo "Выберите действие:"
-        echo "1) Установить узел (версия 0.2.1)"
+        echo "1) Установить узел (версия 0.2.2)"
         echo "2) Просмотреть логи службы"
         echo "3) Создать кошелек"
         echo "4) Просмотреть приватный ключ"
-        echo "5) Обновить скрипт (обновление с версии 0.2.0)"
+        echo "5) Обновить скрипт (обновление с версии 0.2.1)"
         echo "6) Выход"
         echo -n "Введите опцию [1-6]: "
         read choice
@@ -54,15 +54,15 @@ function install_node() {
 
     # Загрузка библиотеки fractald
     echo "Загрузка библиотеки fractald..."
-    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.2.1/fractald-0.2.1-x86_64-linux-gnu.tar.gz
+    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.2.2/fractald-0.2.2-x86_64-linux-gnu.tar.gz
 
     # Извлечение библиотеки fractald
     echo "Извлечение библиотеки fractald..."
-    tar -zxvf fractald-0.2.1-x86_64-linux-gnu.tar.gz
+    tar -zxvf fractald-0.2.2-x86_64-linux-gnu.tar.gz
 
     # Меняем название папки
     echo "Меняем название папки на fractald"
-    mv fractald-0.2.1-x86_64-linux-gnu fractald
+    mv fractald-0.2.2-x86_64-linux-gnu fractald
     
     # Переход в директорию fractald
     echo "Переход в директорию fractald..."
@@ -162,15 +162,15 @@ function update_script() {
 
     # Загрузка новой версии библиотеки fractald
     echo "Загрузка новой версии библиотеки fractald..."
-    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.2.1/fractald-0.2.1-x86_64-linux-gnu.tar.gz
+    wget https://github.com/fractal-bitcoin/fractald-release/releases/download/v0.2.2/fractald-0.2.2-x86_64-linux-gnu.tar.gz
 
     # Извлечение новой версии библиотеки fractald
     echo "Извлечение новой версии библиотеки fractald..."
-    tar -zxvf fractald-0.2.1-x86_64-linux-gnu.tar.gz
+    tar -zxvf fractald-0.2.2-x86_64-linux-gnu.tar.gz
 
     # Меняем название папки
     echo "Меняем название папки на fractald"
-    mv fractald-0.2.1-x86_64-linux-gnu fractald
+    mv fractald-0.2.2-x86_64-linux-gnu fractald
 
     # Переход в директорию новой версии fractald
     echo "Переход в директорию новой версии fractald..."
